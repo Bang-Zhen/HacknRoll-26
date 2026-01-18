@@ -3,12 +3,13 @@
 import {
   createContext,
   type PropsWithChildren,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { apiFetch } from "../../lib/api";
 import { getErrorMessage } from "../../lib/errors";
 import { useAuth } from "./AuthProvider";
@@ -29,8 +30,6 @@ export function useAuthModal() {
 
 export function AuthModalProvider({ children }: PropsWithChildren) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const authParam = searchParams.get("auth") as Mode | null;
   const { refreshMe } = useAuth();
 
   const [open, setOpen] = useState(false);
@@ -44,24 +43,26 @@ export function AuthModalProvider({ children }: PropsWithChildren) {
   });
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const authParam = params.get("auth") as Mode | null;
     if (authParam === "login" || authParam === "register") {
       setMode(authParam);
       setOpen(true);
     }
-  }, [authParam]);
+  }, []);
 
-  function openAuth(nextMode: Mode) {
+  const openAuth = useCallback((nextMode: Mode) => {
     setMode(nextMode);
     setOpen(true);
-    const qs = new URLSearchParams(searchParams.toString());
+    const qs = new URLSearchParams(window.location.search);
     qs.set("auth", nextMode);
     router.replace(`/?${qs.toString()}`);
-  }
+  }, [router]);
 
   function close() {
     setOpen(false);
     setError("");
-    const qs = new URLSearchParams(searchParams.toString());
+    const qs = new URLSearchParams(window.location.search);
     qs.delete("auth");
     const next = qs.toString();
     router.replace(next ? `/?${next}` : "/");
@@ -89,7 +90,7 @@ export function AuthModalProvider({ children }: PropsWithChildren) {
     }
   }
 
-  const value = useMemo<Ctx>(() => ({ openAuth }), [searchParams]);
+  const value = useMemo<Ctx>(() => ({ openAuth }), [openAuth]);
 
   return (
     <AuthModalContext.Provider value={value}>
