@@ -35,6 +35,7 @@ jobs:
         working-directory: frontend
         env:
           GITHUB_PAGES: "true"
+          GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Disable Jekyll
         run: |
