@@ -145,6 +145,30 @@ Use the Lua engine:
 INVITE_ENGINE=lua INVITE_ENGINE_BIN=lua INVITE_ENGINE_SCRIPT=./engines/lua/invite/invite.lua npm run dev
 ```
 
+Spider chart stats can run from an R engine (same fallback behavior).
+
+Use the R engine:
+
+```bash
+SPIDER_ENGINE=r SPIDER_ENGINE_BIN=Rscript SPIDER_ENGINE_SCRIPT=./engines/r/spider/stats.R npm run dev
+```
+
+Roulette bet resolution can run from a Racket engine (same fallback behavior).
+
+Use the Racket engine:
+
+```bash
+ROULETTE_RESOLVE_ENGINE=racket ROULETTE_RESOLVE_ENGINE_BIN=racket ROULETTE_RESOLVE_ENGINE_SCRIPT=./engines/racket/roulette_resolve/resolve.rkt npm run dev
+```
+
+Coinflip UI can load an optional microfrontend bundle (fallbacks to the React page).
+
+Set the URL for a microfrontend bundle:
+
+```bash
+NEXT_PUBLIC_COINFLIP_MFE_URL=http://localhost:3000/microfrontends/coinflip.js npm run dev
+```
+
 ### Frontend
 
 In another terminal:

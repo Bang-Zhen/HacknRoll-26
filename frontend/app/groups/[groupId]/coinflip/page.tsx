@@ -8,6 +8,7 @@ import { normalizeNumberInput } from "../../../../lib/inputs";
 import { getErrorMessage } from "../../../../lib/errors";
 import { Card, CardDescription, CardTitle } from "../../../../components/ui/card";
 import { PageTitle } from "../../../../components/ui/shell";
+import { CoinflipHost } from "../../../../components/mfe/coinflip-host";
 import styles from "./coinflip.module.css";
 
 type CoinflipResponse = {
@@ -24,6 +25,7 @@ export default function CoinflipPage() {
   const params = useParams();
   const router = useRouter();
   const groupId = params.groupId as string;
+  const mfeUrl = process.env.NEXT_PUBLIC_COINFLIP_MFE_URL;
   const [betCredits, setBetCredits] = useState<number | null>(10);
   const [choice, setChoice] = useState<"heads" | "tails">("heads");
   const [phase, setPhase] = useState<"idle" | "flipping" | "done">("idle");
@@ -86,6 +88,26 @@ export default function CoinflipPage() {
     if (phase === "done" && outcome) return outcome.won ? "You won." : "You lost.";
     return "Pick a side and flip.";
   }, [phase, outcome]);
+
+  if (mfeUrl) {
+    return (
+      <main className={styles.wrap}>
+        <PageTitle
+          title="Coinflip"
+          subtitle="Coin Toss (DarePot style). Win pays 2x."
+          right={
+            <button
+              onClick={() => router.push(`/groups/${groupId}`)}
+              className="rounded-md border border-border px-3 py-2 hover:bg-surface-elevated"
+            >
+              Back
+            </button>
+          }
+        />
+        <CoinflipHost groupId={groupId} scriptUrl={mfeUrl} />
+      </main>
+    );
+  }
 
   return (
     <main className={styles.wrap}>

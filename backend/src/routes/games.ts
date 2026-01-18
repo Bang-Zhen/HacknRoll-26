@@ -7,8 +7,9 @@ import { playCoinflipEngine } from "../services/engine/coinflip";
 import { playBlackjackEngine } from "../services/engine/blackjack";
 import { MinesState } from "../services/games/mines";
 import { cashOutEngine, generateMinesEngine, revealTileEngine } from "../services/engine/mines";
-import { resolveRouletteBet, RouletteBet } from "../services/games/roulette";
+import { RouletteBet } from "../services/games/roulette";
 import { spinRouletteEngine } from "../services/engine/roulette";
+import { resolveRouletteBetEngine } from "../services/engine/rouletteResolve";
 import { settlePlinkoEngine } from "../services/engine/plinko";
 import { type PokerCard } from "../services/games/poker";
 import { buildDeckEngine, drawEngine, pickWinnerEngine } from "../services/engine/poker";
@@ -1028,7 +1029,7 @@ export async function finalizeRouletteRound(roundId: string) {
   await prisma.$transaction(async (tx) => {
     for (const bet of bets) {
       const selection = bet.selection as RouletteBet;
-      const { payoutMinor } = resolveRouletteBet(
+      const { payoutMinor } = resolveRouletteBetEngine(
         selection,
         result,
         bet.amountMinor,

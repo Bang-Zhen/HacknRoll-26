@@ -1,5 +1,6 @@
 import prisma from "../db";
 import { config } from "../config";
+import { computeSpiderStatsEngine } from "./engine/spiderStats";
 
 export async function getLeaderboard(groupId: string) {
   const wallets = await prisma.wallet.findMany({
@@ -96,18 +97,18 @@ export async function getGroupActivity(groupId: string) {
   return withBalances;
 }
 
+type SpiderTx = {
+  amountMinor: number;
+  type: string;
+  meta: unknown;
+};
+
 function clamp01(n: number) {
   if (!Number.isFinite(n)) return 0;
   return Math.max(0, Math.min(1, n));
 }
 
-export async function getSpiderStats(groupId: string, userId: string) {
-  const txs = await prisma.transaction.findMany({
-    where: { groupId, userId },
-    select: { amountMinor: true, type: true, meta: true, createdAt: true, relatedUserId: true },
-    orderBy: { createdAt: "asc" },
-  });
-
+function computeSpiderStatsFromTxs(txs: SpiderTx[], startCreditsMinor: number) {
   const betTxs = txs.filter((t) => t.type === "BET");
   const totalBetMinor = betTxs.reduce((sum, t) => sum + Math.abs(t.amountMinor), 0);
 
@@ -131,14 +132,11 @@ export async function getSpiderStats(groupId: string, userId: string) {
       : 0;
   const stddev = Math.sqrt(variance);
 
-  // Normalize heuristics to 0..1
-  const start = config.creditsStartMinor;
-
-  const aggression = clamp01(totalBetMinor / (start * 3)); // betting a lot pushes toward 1
-  const luck = clamp01(Math.min(2, totalWonMinor / Math.max(1, totalBetMinor)) / 2); // 0..200% -> 0..1
+  const aggression = clamp01(totalBetMinor / (startCreditsMinor * 3));
+  const luck = clamp01(Math.min(2, totalWonMinor / Math.max(1, totalBetMinor)) / 2);
   const variety = clamp01(gameTypes.size / 6);
   const social = clamp01(transferCount / 10);
-  const volatility = clamp01(stddev / (start / 2));
+  const volatility = clamp01(stddev / (startCreditsMinor / 2));
 
   return {
     axes: [
@@ -156,4 +154,26 @@ export async function getSpiderStats(groupId: string, userId: string) {
       txCount: txs.length,
     },
   };
+}
+
+export async function getSpiderStats(groupId: string, userId: string) {
+  const txs = await prisma.transaction.findMany({
+    where: { groupId, userId },
+    select: { amountMinor: true, type: true, meta: true, createdAt: true, relatedUserId: true },
+    orderBy: { createdAt: "asc" },
+  });
+
+  const simpleTxs: SpiderTx[] = txs.map((t) => ({
+    amountMinor: t.amountMinor,
+    type: t.type,
+    meta: t.meta,
+  }));
+
+  const engine = computeSpiderStatsEngine({
+    txs: simpleTxs,
+    startCreditsMinor: config.creditsStartMinor,
+  });
+  if (engine) return engine;
+
+  return computeSpiderStatsFromTxs(simpleTxs, config.creditsStartMinor);
 }
