@@ -1,0 +1,5 @@
+{:source-paths ["src"]
+ :builds {:plinko {:target :browser
+                   :output-dir "dist"
+                   :asset-path "/microfrontends/plinko"
+                   :modules {:main {:entries [plinko-mfe.core]}}}}}

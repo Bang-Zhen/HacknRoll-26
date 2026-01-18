@@ -2,18 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type CoinflipMFE = {
+type MinesMFE = {
   mount: (el: HTMLElement, opts: { groupId: string }) => void;
   unmount?: (el: HTMLElement) => void;
 };
 
 declare global {
   interface Window {
-    CoinflipMFE?: CoinflipMFE;
+    MinesMFE?: MinesMFE;
   }
 }
 
-export function CoinflipHost({
+export function MinesHost({
   groupId,
   scriptUrl,
 }: {
@@ -26,20 +26,20 @@ export function CoinflipHost({
 
   useEffect(() => {
     let script: HTMLScriptElement | null = document.querySelector(
-      `script[data-coinflip-mfe="${scriptUrl}"]`,
+      `script[data-mines-mfe="${scriptUrl}"]`,
     );
 
     if (!script) {
       script = document.createElement("script");
       script.src = scriptUrl;
       script.async = true;
-      script.dataset.coinflipMfe = scriptUrl;
+      script.dataset.minesMfe = scriptUrl;
       document.body.appendChild(script);
     }
 
     function onLoad() {
-      if (window.CoinflipMFE && rootRef.current) {
-        window.CoinflipMFE.mount(rootRef.current, { groupId });
+      if (window.MinesMFE && rootRef.current) {
+        window.MinesMFE.mount(rootRef.current, { groupId });
         setReady(true);
       } else {
         setError("Microfrontend did not register.");
@@ -56,8 +56,8 @@ export function CoinflipHost({
     return () => {
       script?.removeEventListener("load", onLoad);
       script?.removeEventListener("error", onError);
-      if (rootRef.current && window.CoinflipMFE?.unmount) {
-        window.CoinflipMFE.unmount(rootRef.current);
+      if (rootRef.current && window.MinesMFE?.unmount) {
+        window.MinesMFE.unmount(rootRef.current);
       }
     };
   }, [groupId, scriptUrl]);

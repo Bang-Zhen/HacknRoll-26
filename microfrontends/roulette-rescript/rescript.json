@@ -1,0 +1,14 @@
+{
+  "name": "roulette-mfe",
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    }
+  ],
+  "bs-dependencies": [],
+  "package-specs": {
+    "module": "esmodule",
+    "in-source": true
+  }
+}

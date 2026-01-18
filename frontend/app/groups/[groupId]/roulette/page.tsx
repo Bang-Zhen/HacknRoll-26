@@ -11,6 +11,7 @@ import { useAuth } from "../../../../components/auth/AuthProvider";
 import { RouletteWheel } from "../../../../components/roulette/roulette-wheel";
 import { BetPanel, type BetColor } from "../../../../components/roulette/bet-panel";
 import { BetBoard, type BetRow } from "../../../../components/roulette/bet-board";
+import { RouletteHost } from "../../../../components/mfe/roulette-host";
 
 type RouletteBet = {
   id: string;
@@ -25,6 +26,7 @@ export default function RoulettePage() {
   const router = useRouter();
   const groupId = params.groupId as string;
   const { me } = useAuth();
+  const mfeUrl = process.env.NEXT_PUBLIC_ROULETTE_MFE_URL;
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [wheelRotation, setWheelRotation] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -193,6 +195,26 @@ export default function RoulettePage() {
       })
       .filter(Boolean) as BetRow[];
   }, [bets]);
+
+  if (mfeUrl) {
+    return (
+      <main className="space-y-6">
+        <PageTitle
+          title="Roulette"
+          subtitle="Pick a color. One bet per spin."
+          right={
+            <button
+              onClick={() => router.push(`/groups/${groupId}`)}
+              className="rounded-md border border-border px-3 py-2 hover:bg-surface-elevated"
+            >
+              Back
+            </button>
+          }
+        />
+        <RouletteHost groupId={groupId} scriptUrl={mfeUrl} />
+      </main>
+    );
+  }
 
   return (
     <main className="space-y-6">

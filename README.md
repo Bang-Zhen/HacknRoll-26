@@ -161,12 +161,145 @@ Use the Racket engine:
 ROULETTE_RESOLVE_ENGINE=racket ROULETTE_RESOLVE_ENGINE_BIN=racket ROULETTE_RESOLVE_ENGINE_SCRIPT=./engines/racket/roulette_resolve/resolve.rkt npm run dev
 ```
 
+Roulette red/black multiplier can run through a Brainfuck program (same fallback behavior).
+This only affects red/black bets and keeps green/straight resolution in JS.
+
+```bash
+ROULETTE_RESOLVE_ENGINE=bf ROULETTE_MULTIPLIER_BF_PATH=./engines/brainfuck/roulette/multiplier.bf npm run dev
+```
+
 Coinflip UI can load an optional microfrontend bundle (fallbacks to the React page).
 
 Set the URL for a microfrontend bundle:
 
 ```bash
 NEXT_PUBLIC_COINFLIP_MFE_URL=http://localhost:3000/microfrontends/coinflip.js npm run dev
+```
+
+Elm coinflip microfrontend source lives in `microfrontends/coinflip-elm`.
+
+Build the Elm bundle:
+
+```bash
+cd microfrontends/coinflip-elm
+./build.sh
+```
+
+Windows (PowerShell):
+
+```bash
+cd microfrontends/coinflip-elm
+.\build.ps1
+```
+
+Mines UI can load an optional microfrontend bundle (fallbacks to the React page).
+
+```bash
+NEXT_PUBLIC_MINES_MFE_URL=http://localhost:3000/microfrontends/mines.js npm run dev
+```
+
+PureScript mines microfrontend source lives in `microfrontends/mines-purescript`.
+
+Build the PureScript bundle:
+
+```bash
+cd microfrontends/mines-purescript
+./build.sh
+```
+
+Windows (PowerShell):
+
+```bash
+cd microfrontends/mines-purescript
+.\build.ps1
+```
+
+Roulette UI can load an optional microfrontend bundle (fallbacks to the React page).
+
+```bash
+NEXT_PUBLIC_ROULETTE_MFE_URL=http://localhost:3000/microfrontends/roulette.js npm run dev
+```
+
+ReScript roulette microfrontend source lives in `microfrontends/roulette-rescript`.
+
+Build the ReScript bundle:
+
+```bash
+cd microfrontends/roulette-rescript
+./build.sh
+```
+
+Windows (PowerShell):
+
+```bash
+cd microfrontends/roulette-rescript
+.\build.ps1
+```
+
+Plinko UI can load an optional microfrontend bundle (fallbacks to the React page).
+
+```bash
+NEXT_PUBLIC_PLINKO_MFE_URL=http://localhost:3000/microfrontends/plinko.js npm run dev
+```
+
+ClojureScript plinko microfrontend source lives in `microfrontends/plinko-clojurescript`.
+
+Build the ClojureScript bundle:
+
+```bash
+cd microfrontends/plinko-clojurescript
+./build.sh
+```
+
+Windows (PowerShell):
+
+```bash
+cd microfrontends/plinko-clojurescript
+.\build.ps1
+```
+
+Blackjack UI can load an optional microfrontend bundle (fallbacks to the React page).
+
+```bash
+NEXT_PUBLIC_BLACKJACK_MFE_URL=http://localhost:3000/microfrontends/blackjack.js npm run dev
+```
+
+Fable blackjack microfrontend source lives in `microfrontends/blackjack-fable`.
+
+Build the Fable bundle:
+
+```bash
+cd microfrontends/blackjack-fable
+./build.sh
+```
+
+Windows (PowerShell):
+
+```bash
+cd microfrontends/blackjack-fable
+.\build.ps1
+```
+
+Poker UI can load an optional microfrontend bundle (fallbacks to the React page).
+
+```bash
+NEXT_PUBLIC_POKER_MFE_URL=http://localhost:3000/microfrontends/poker.js npm run dev
+```
+
+Scala.js poker microfrontend source lives in `microfrontends/poker-scalajs`.
+
+Build the Scala.js bundle:
+
+```bash
+cd microfrontends/poker-scalajs
+./build.sh
+```
+
+Windows (PowerShell):
+
+```bash
+cd microfrontends/poker-scalajs
+.\build.ps1
 ```
 
 ### Frontend

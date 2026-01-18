@@ -8,6 +8,7 @@ import { normalizeNumberInput } from "../../../../lib/inputs";
 import { getErrorMessage } from "../../../../lib/errors";
 import { Card, CardDescription, CardTitle } from "../../../../components/ui/card";
 import { PageTitle } from "../../../../components/ui/shell";
+import { MinesHost } from "../../../../components/mfe/mines-host";
 
 type RevealResponse = {
   status: string;
@@ -25,6 +26,7 @@ export default function MinesPage() {
   const params = useParams();
   const router = useRouter();
   const groupId = params.groupId as string;
+  const mfeUrl = process.env.NEXT_PUBLIC_MINES_MFE_URL;
   const [betCredits, setBetCredits] = useState<number | null>(10);
   const [mineCount, setMineCount] = useState<number | null>(3);
   const [roundId, setRoundId] = useState<string | null>(null);
@@ -166,6 +168,26 @@ export default function MinesPage() {
       ? Math.floor(activeBetMinor * multiplier)
       : 0;
   const canCashOut = status === "ACTIVE" && gemsFound > 0;
+
+  if (mfeUrl) {
+    return (
+      <main className="space-y-6">
+        <PageTitle
+          title="Mines"
+          subtitle="Avoid the bombs. Cash out anytime."
+          right={
+            <button
+              onClick={() => router.push(`/groups/${groupId}`)}
+              className="rounded-md border border-border px-3 py-2 hover:bg-surface-elevated"
+            >
+              Back
+            </button>
+          }
+        />
+        <MinesHost groupId={groupId} scriptUrl={mfeUrl} />
+      </main>
+    );
+  }
 
   return (
     <main className="space-y-6">

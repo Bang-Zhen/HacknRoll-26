@@ -5,6 +5,7 @@ import {
   type RouletteBet,
   type RouletteResult,
 } from "../games/roulette";
+import { getRouletteMultiplierBrainfuck } from "./rouletteMultiplier";
 
 const ENGINE = process.env.ROULETTE_RESOLVE_ENGINE || "ts";
 const ENGINE_BIN = process.env.ROULETTE_RESOLVE_ENGINE_BIN || "racket";
@@ -49,6 +50,14 @@ export function resolveRouletteBetEngine(
   result: RouletteResult,
   amountMinor: number,
 ): ResolveOutput {
+  if (ENGINE === "bf") {
+    const multiplier = getRouletteMultiplierBrainfuck(bet);
+    if (multiplier !== null) {
+      const won = result.color === bet.betType;
+      return { won, payoutMinor: won ? amountMinor * multiplier : 0 };
+    }
+  }
+
   if (ENGINE === "racket") {
     const resolved = runRacket({ bet, result, amountMinor });
     if (resolved) return resolved;

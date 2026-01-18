@@ -1,0 +1,19 @@
+package:
+  name: mines-mfe
+  dependencies:
+    - prelude
+    - effect
+    - console
+    - web-dom
+    - web-html
+    - web-events
+    - web-uievents
+    - refs
+    - arrays
+    - maybe
+    - strings
+    - argonaut-core
+    - argonaut-parser
+    - argonaut-codecs
+  sources:
+    - src

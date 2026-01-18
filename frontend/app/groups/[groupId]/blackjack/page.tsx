@@ -3,11 +3,33 @@
 import { useParams, useRouter } from "next/navigation";
 import { PageTitle } from "../../../../components/ui/shell";
 import { BlackjackPage as BlackjackGamePage } from "../../../../components/blackjack/blackjack-page";
+import { BlackjackHost } from "../../../../components/mfe/blackjack-host";
 
 export default function BlackjackRoutePage() {
   const params = useParams();
   const router = useRouter();
   const groupId = params.groupId as string;
+  const mfeUrl = process.env.NEXT_PUBLIC_BLACKJACK_MFE_URL;
+
+  if (mfeUrl) {
+    return (
+      <main className="space-y-6">
+        <PageTitle
+          title="Blackjack"
+          subtitle="Beat the dealer to 21."
+          right={
+            <button
+              onClick={() => router.push(`/groups/${groupId}`)}
+              className="rounded-md border border-border px-3 py-2 hover:bg-surface-elevated"
+            >
+              Back
+            </button>
+          }
+        />
+        <BlackjackHost groupId={groupId} scriptUrl={mfeUrl} />
+      </main>
+    );
+  }
 
   return (
     <main className="space-y-6">

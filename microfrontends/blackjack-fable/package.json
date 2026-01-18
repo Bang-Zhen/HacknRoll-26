@@ -1,0 +1,10 @@
+{
+  "name": "blackjack-mfe",
+  "private": true,
+  "scripts": {
+    "build": "npx fable src --outDir dist --define:PRODUCTION"
+  },
+  "devDependencies": {
+    "fable-compiler": "^4.7.0"
+  }
+}

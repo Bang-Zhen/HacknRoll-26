@@ -1,0 +1,10 @@
+{
+  "name": "plinko-mfe",
+  "private": true,
+  "scripts": {
+    "build": "shadow-cljs release plinko"
+  },
+  "devDependencies": {
+    "shadow-cljs": "^2.28.7"
+  }
+}

@@ -11,6 +11,7 @@ import { Button } from "../../../../components/ui/button";
 import { useAuth } from "../../../../components/auth/AuthProvider";
 import { cn } from "../../../../lib/utils";
 import { Check, ChevronRight, Club, Diamond, Heart, Spade } from "lucide-react";
+import { PokerHost } from "../../../../components/mfe/poker-host";
 
 type PokerState = {
   status: "WAITING" | "PREFLOP" | "FLOP" | "TURN" | "RIVER" | "SHOWDOWN";
@@ -78,6 +79,7 @@ export default function PokerPage() {
   const params = useParams();
   const router = useRouter();
   const groupId = params.groupId as string;
+  const mfeUrl = process.env.NEXT_PUBLIC_POKER_MFE_URL;
   const { me } = useAuth();
   const [buyInCredits, setBuyInCredits] = useState<number | null>(50);
   const [minBetCredits, setMinBetCredits] = useState<number | null>(5);
@@ -193,6 +195,30 @@ export default function PokerPage() {
     } catch (err) {
       setMessage((err as Error).message);
     }
+  }
+
+  if (mfeUrl) {
+    return (
+      <main className="space-y-6">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold text-foreground">Poker</h1>
+            <p className="text-muted-foreground">
+              Texas Hold&apos;em vibes. Create a table, join, and play.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => router.push(`/groups/${groupId}/games`)}
+            >
+              Back to Games
+            </Button>
+          </div>
+        </div>
+        <PokerHost groupId={groupId} scriptUrl={mfeUrl} />
+      </main>
+    );
   }
 
   return (

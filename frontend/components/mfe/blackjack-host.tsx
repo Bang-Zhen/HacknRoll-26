@@ -2,18 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type CoinflipMFE = {
+type BlackjackMFE = {
   mount: (el: HTMLElement, opts: { groupId: string }) => void;
   unmount?: (el: HTMLElement) => void;
 };
 
 declare global {
   interface Window {
-    CoinflipMFE?: CoinflipMFE;
+    BlackjackMFE?: BlackjackMFE;
   }
 }
 
-export function CoinflipHost({
+export function BlackjackHost({
   groupId,
   scriptUrl,
 }: {
@@ -26,20 +26,20 @@ export function CoinflipHost({
 
   useEffect(() => {
     let script: HTMLScriptElement | null = document.querySelector(
-      `script[data-coinflip-mfe="${scriptUrl}"]`,
+      `script[data-blackjack-mfe="${scriptUrl}"]`,
     );
 
     if (!script) {
       script = document.createElement("script");
       script.src = scriptUrl;
       script.async = true;
-      script.dataset.coinflipMfe = scriptUrl;
+      script.dataset.blackjackMfe = scriptUrl;
       document.body.appendChild(script);
     }
 
     function onLoad() {
-      if (window.CoinflipMFE && rootRef.current) {
-        window.CoinflipMFE.mount(rootRef.current, { groupId });
+      if (window.BlackjackMFE && rootRef.current) {
+        window.BlackjackMFE.mount(rootRef.current, { groupId });
         setReady(true);
       } else {
         setError("Microfrontend did not register.");
@@ -56,8 +56,8 @@ export function CoinflipHost({
     return () => {
       script?.removeEventListener("load", onLoad);
       script?.removeEventListener("error", onError);
-      if (rootRef.current && window.CoinflipMFE?.unmount) {
-        window.CoinflipMFE.unmount(rootRef.current);
+      if (rootRef.current && window.BlackjackMFE?.unmount) {
+        window.BlackjackMFE.unmount(rootRef.current);
       }
     };
   }, [groupId, scriptUrl]);

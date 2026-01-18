@@ -7,6 +7,7 @@ import { creditsToMinor, formatCredits } from "../../../../lib/credits";
 import { getErrorMessage } from "../../../../lib/errors";
 import { PageTitle } from "../../../../components/ui/shell";
 import { PlinkoBoard, type Ball } from "../../../../components/plinko/PlinkoBoard";
+import { PlinkoHost } from "../../../../components/mfe/plinko-host";
 
 function parseCreditsInputToMinor(value: string) {
   const v = value.trim();
@@ -22,6 +23,7 @@ export default function PlinkoPage() {
   const params = useParams();
   const router = useRouter();
   const groupId = params.groupId as string;
+  const mfeUrl = process.env.NEXT_PUBLIC_PLINKO_MFE_URL;
   type Risk = "low" | "medium" | "high";
   const [balanceMinor, setBalanceMinor] = useState<number>(0);
   const [betInput, setBetInput] = useState("10");
@@ -152,6 +154,26 @@ export default function PlinkoPage() {
     },
     [groupId, rows, risk],
   );
+
+  if (mfeUrl) {
+    return (
+      <main className="space-y-6">
+        <PageTitle
+          title="Plinko"
+          subtitle="Exact UI/physics/multipliers from the provided build."
+          right={
+            <button
+              onClick={() => router.push(`/groups/${groupId}`)}
+              className="rounded-md border border-border px-3 py-2 hover:bg-surface-elevated"
+            >
+              Back
+            </button>
+          }
+        />
+        <PlinkoHost groupId={groupId} scriptUrl={mfeUrl} />
+      </main>
+    );
+  }
 
   return (
     <main className="space-y-6">
