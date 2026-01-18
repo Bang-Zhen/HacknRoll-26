@@ -2,6 +2,14 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { DarePotFrame } from "../../../components/ui/darepot-frame";
 
+const STATIC_GROUP_IDS = ["demo"];
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return STATIC_GROUP_IDS.map((groupId) => ({ groupId }));
+}
+
 export default function GroupLayout({
   children,
   params,
