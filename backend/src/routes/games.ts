@@ -10,7 +10,7 @@ import { cashOutEngine, generateMinesEngine, revealTileEngine } from "../service
 import { RouletteBet } from "../services/games/roulette";
 import { spinRouletteEngine } from "../services/engine/roulette";
 import { resolveRouletteBetEngine } from "../services/engine/rouletteResolve";
-import { settlePlinkoEngine } from "../services/engine/plinko";
+import { settlePlinkoWithHaskellFallback } from "../services/engine/plinkoHaskell";
 import { type PokerCard } from "../services/games/poker";
 import { buildDeckEngine, drawEngine, pickWinnerEngine } from "../services/engine/poker";
 import { config } from "../config";
@@ -553,7 +553,12 @@ router.post("/:groupId/plinko/play", async (req, res) => {
   }
 
   const { betMinor, rows, risk, slotIndex } = parsed.data;
-  const { multiplier, payoutMinor } = settlePlinkoEngine({ betMinor, rows, risk, slotIndex });
+  const { multiplier, payoutMinor } = settlePlinkoWithHaskellFallback({
+    betMinor,
+    rows,
+    risk,
+    slotIndex,
+  });
 
   try {
     await prisma.$transaction(async (tx) => {

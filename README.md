@@ -62,6 +62,12 @@ Enable it when running the backend:
 COINFLIP_ENGINE=zig COINFLIP_ENGINE_BIN=./engines/zig/coinflip/coinflip npm run dev
 ```
 
+Coinflip can also run from a Janet engine (same fallback behavior).
+
+```bash
+COINFLIP_ENGINE=janet COINFLIP_JANET_BIN=janet COINFLIP_JANET_SCRIPT=./engines/janet/coinflip/coinflip.janet npm run dev
+```
+
 Blackjack can run from a Nim engine (same fallback behavior).
 
 Build the Nim engine:
@@ -120,6 +126,58 @@ Enable it when running the backend:
 
 ```bash
 PLINKO_ENGINE=crystal PLINKO_ENGINE_BIN=./engines/crystal/plinko/plinko npm run dev
+```
+
+Plinko can also run from a Haskell engine (same fallback behavior).
+
+Build the Haskell engine:
+
+```bash
+cd engines/haskell/plinko
+ghc -O2 Plinko.hs -o plinko
+```
+
+Enable it when running the backend:
+
+```bash
+PLINKO_ENGINE=haskell PLINKO_HASKELL_BIN=./engines/haskell/plinko/plinko npm run dev
+```
+
+## Backup niche languages (not wired)
+
+The following samples are kept as reference/backup implementations:
+
+- `engines/backups/ada/invite_code.adb`
+- `engines/backups/erlang/coinflip.erl`
+- `engines/backups/idris/Plinko.idr`
+- `engines/backups/common-lisp/roulette.lisp`
+- `engines/backups/julia/ledger.jl`
+
+## Diagnostic engines (optional, low impact)
+
+These engines only add an extra `diag` field to `/health` when enabled.
+They are **off by default**, so functionality is unchanged.
+
+Enable one of the following:
+
+```bash
+DIAG_ENGINE=go DIAG_GO_BIN=./engines/go/diag/diag npm run dev
+```
+
+```bash
+DIAG_ENGINE=rust DIAG_RUST_BIN=./engines/rust/diag/diag npm run dev
+```
+
+```bash
+DIAG_ENGINE=elixir DIAG_ELIXIR_BIN=elixir DIAG_ELIXIR_SCRIPT=./engines/elixir/diag/diag.exs npm run dev
+```
+
+```bash
+DIAG_ENGINE=tcl DIAG_TCL_BIN=tclsh DIAG_TCL_SCRIPT=./engines/tcl/diag/diag.tcl npm run dev
+```
+
+```bash
+DIAG_ENGINE=scheme DIAG_SCHEME_BIN=guile DIAG_SCHEME_SCRIPT=./engines/scheme/diag/diag.scm npm run dev
 ```
 
 Poker can run from a D engine (same fallback behavior).
