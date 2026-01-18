@@ -1,10 +1,19 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+import { getApiBase } from "./api-base";
 
 export async function apiFetch<T>(
   path: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const apiBase = getApiBase();
+  if (!apiBase) {
+    const error = new Error(
+      "Backend unavailable on GitHub Pages. Run locally or set NEXT_PUBLIC_API_URL.",
+    );
+    (error as Error & { status?: number }).status = 0;
+    throw error;
+  }
+
+  const res = await fetch(`${apiBase}${path}`, {
     ...options,
     credentials: "include",
     headers: {
