@@ -165,13 +165,17 @@ export default function PokerPage() {
     e.preventDefault();
     setMessage("");
     try {
-      if (!useFullWallet && (!buyInCredits || buyInCredits <= 0)) {
-        throw new Error("Buy-in required");
+      let buyInMinor: number | undefined;
+      if (!useFullWallet) {
+        if (buyInCredits == null || buyInCredits <= 0) {
+          throw new Error("Buy-in required");
+        }
+        buyInMinor = creditsToMinor(buyInCredits);
       }
       await apiFetch(`/api/groups/${groupId}/poker/join`, {
         method: "POST",
         body: JSON.stringify({
-          buyInMinor: useFullWallet ? undefined : creditsToMinor(buyInCredits),
+          buyInMinor,
           useFullWallet,
         }),
       });
